@@ -1,7 +1,7 @@
 var map = L.map('weathermap').setView([38, -95], 4);
-var basemapUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-var basemap = L.tileLayer(basemapUrl, {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
-            
+var basemapUrl = 'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png';
+var basemap = L.tileLayer(basemapUrl, {attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+
 //add national precipitation layer
 var radarUrl = 'https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi';
 var radarDisplayOptions = {
@@ -16,10 +16,12 @@ var weatherAlertsUrl = 'https://api.weather.gov/alerts/active?region_type=land';
 $.getJSON(weatherAlertsUrl, function(data) {
     L.geoJSON(data, {
         style: function(feature){
-            var alertColor = 'orange';
-            if (feature.properties.severity === 'Severe') alertColor = 'red';
-            if (feature.properties.severity === 'Extreme') alertColor = 'purple';
-            return {color: alertColor};
+            var alertColor = 'yellow';
+            if (feature.properties.severity === 'Extreme') {
+                alertColor = 'red';
+            } else if (feature.properties.serverity === 'Severe') {
+                alertColor = 'orange';
+            } else return {color: alertColor};
         },
         onEachFeature: function(feature, layer) {
             layer.bindPopup(feature.properties.headline);
