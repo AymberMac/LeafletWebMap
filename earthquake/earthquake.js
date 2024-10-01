@@ -1,6 +1,6 @@
-var map = L.map('earthquakemap').setView([15, -30], 2.75);
-var basemapUrl = 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png';
-var basemap = L.tileLayer(basemapUrl, {attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+var map = L.map('earthquakemap').setView([15, -30], 2);
+var basemapUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}';
+var basemap = L.tileLayer(basemapUrl, {attribution: 'Tiles &copy; Esri &mdash; Source: US National Park Service'}).addTo(map);
 
 // create marker array
 let markersArray = {}; 
@@ -15,11 +15,11 @@ $.getJSON(earthquakeFeedUrl, function(data) {
             const mag = feature.properties.mag;
             const geojsonMarkerOptions = {
               opacity: 0.8,
-              fillOpacity: 0.6,
+              fillOpacity: 0.8,
               // define the marker color
               color: mag >= 9.0 ? 'DarkMagenta' : mag >= 8.0 ? 'MediumVioletRed' : mag >= 7.0 ? 'DarkRed' : 
               mag >= 6.0 ? 'Red' : mag >= 5.0 ? 'OrangeRed' : mag >= 4.0 ? 'DarkOrange' : mag >= 3.0 ? 'Orange' : 
-              mag >= 2.0 ? 'Gold' : mag >= 1.0 ? 'Yellow': 'black'
+              mag >= 2.0 ? 'Goldenrod' : mag >= 1.0 ? 'Gold': 'Yellow'
             };
     
             // define popups
