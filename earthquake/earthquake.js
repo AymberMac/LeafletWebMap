@@ -1,6 +1,6 @@
-var map = L.map('earthquakemap').setView([15, -30], 2);
-var basemapUrl = 'https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}.png';
-var basemap = L.tileLayer(basemapUrl).addTo(map);
+var map = L.map('earthquakemap').setView([15, -30], 2.75);
+var basemapUrl = 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png';
+var basemap = L.tileLayer(basemapUrl, {attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
 
 // create marker array
 let markersArray = {}; 
