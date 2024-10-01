@@ -22,10 +22,12 @@ $.getJSON(earthquakeFeedUrl, function(data) {
               mag >= 2.0 ? 'Goldenrod' : mag >= 1.0 ? 'Gold': 'Yellow'
             };
     
-            // standardize time from USGS format
+            // standardize time from USGS format from milliseconds
             var utcSeconds = feature.properties.time;
-            var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
-            d.setUTCSeconds(utcSeconds);
+            if (utcSeconds > 10000000000) { // threshold for milliseconds
+              utcSeconds = Math.floor(utcSeconds / 1000);
+            }
+            var d = new Date(utcSeconds * 1000); // Create a Date object using seconds 
 
             // define popups
             markersArray[feature.id] = L.circleMarker(latlng, geojsonMarkerOptions)
