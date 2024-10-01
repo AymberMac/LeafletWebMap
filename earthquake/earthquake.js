@@ -1,26 +1,49 @@
-var map = L.map('earthquakemap').setView([20, -155], 4);
+var map = L.map('earthquakemap').setView([15, -30], 2);
 var basemapUrl = 'https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}.png';
 var basemap = L.tileLayer(basemapUrl).addTo(map);
+
+// create marker array
+let markersArray = {}; 
+// create magnitude array
+let magsArray = {}; 
 
 //add earthquake alerts layer
 var earthquakeFeedUrl = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson';
 $.getJSON(earthquakeFeedUrl, function(data) {
     L.geoJSON(data, {
-        style: function(feature){
-            var magColor = 'Black';
-            if (feature.properties.mag > 9.0) alertColor = 'Indigo';
-            else if (feature.properties.mag > 8.0) alertColor = 'DarkMagenta';
-            else if (feature.properties.mag > 7.0) alertColor = 'DarkRed';
-            else if (feature.properties.mag > 6.0) alertColor = 'Red';
-            else if (feature.properties.mag > 5.0) alertColor = 'OrangeRed';
-            else if (feature.properties.mag > 4.0) alertColor = 'DarkOrange';
-            else if (feature.properties.mag > 3.0) alertColor = 'Orange';
-            else if (feature.properties.mag > 2.0) alertColor = 'Gold';
-            else if (feature.properties.mag > 1.0) alertColor = 'Yellow';
-            return { color: alertColor }
+        pointToLayer: function(feature, latlng) {
+            const mag = feature.properties.mag;
+            const geojsonMarkerOptions = {
+              opacity: 0.8,
+              fillOpacity: 0.6,
+              // define the marker color
+              color: mag >= 9.0 ? 'DarkMagenta' : mag >= 8.0 ? 'MediumVioletRed' : mag >= 7.0 ? 'DarkRed' : 
+              mag >= 6.0 ? 'Red' : mag >= 5.0 ? 'OrangeRed' : mag >= 4.0 ? 'DarkOrange' : mag >= 3.0 ? 'Orange' : 
+              mag >= 2.0 ? 'Gold' : mag >= 1.0 ? 'Yellow': 'black'
+            };
+    
+            // define popups
+            markersArray[feature.id] = L.circleMarker(latlng, geojsonMarkerOptions)
+                   .addTo(map)
+                   .bindPopup(
+                  `<b>Magnitude:</b>  ${feature.properties.mag} 
+                   <br><b>Location:</b>  ${feature.properties.place}
+                   <br><b>Time:</b>  ${feature.properties.time}`, {
+              closeButton: true,
+              offset: L.point(0, -20)
+            });
+    
+            // here record the mags
+            magsArray[feature.id] = feature.properties.mag;
+    
+            return L.circleMarker(latlng, geojsonMarkerOptions);
           },
-        onEachFeature: function(feature, layer) {
-            layer.bindPopup('Magnitude: ' + feature.properties.mag + '</br>' + 'Location: ' + feature.properties.place + '</br>' + 'Time: ' + feature.properties.time);
+        })
+    
+        // add dynamically anchor tags
+        let markup = '';
+        for (let i in markersArray) {
+          markup += `<a href="#" onclick="markersArray['${i}'].openPopup()"><b>${magsArray[i]} Mag</b></a><br/>`;
         }
-    }).addTo(map);
-});
+        document.getElementById('anchors').innerHTML = markup;
+      });

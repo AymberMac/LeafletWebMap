@@ -3,7 +3,7 @@ body {
     margin: 0;
 }
 
-html, body, #weathermap{
+html, body, #earthquakemap{
     height: 100%;
     width: 100%;
 }

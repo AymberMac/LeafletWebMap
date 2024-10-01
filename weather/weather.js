@@ -1,5 +1,5 @@
 var map = L.map('weathermap').setView([38, -95], 4);
-var basemapUrl = 'https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}.png';
+var basemapUrl = 'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.jpg';
 var basemap = L.tileLayer(basemapUrl).addTo(map);
 
 //add national precipitation layer
