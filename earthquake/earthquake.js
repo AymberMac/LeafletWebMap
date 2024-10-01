@@ -22,28 +22,55 @@ $.getJSON(earthquakeFeedUrl, function(data) {
               mag >= 2.0 ? 'Goldenrod' : mag >= 1.0 ? 'Gold': 'Yellow'
             };
     
+            // standardize time from USGS format
+            var utcSeconds = feature.properties.time;
+            var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+            d.setUTCSeconds(utcSeconds);
+
             // define popups
             markersArray[feature.id] = L.circleMarker(latlng, geojsonMarkerOptions)
                    .addTo(map)
                    .bindPopup(
                   `<b>Magnitude:</b>  ${feature.properties.mag} 
                    <br><b>Location:</b>  ${feature.properties.place}
-                   <br><b>Time:</b>  ${feature.properties.time}`, {
+                   <br><b>Time:</b>  ${d}`, {
               closeButton: true,
               offset: L.point(0, -20)
             });
     
-            // here record the mags
+            // load mags into array
             magsArray[feature.id] = feature.properties.mag;
     
             return L.circleMarker(latlng, geojsonMarkerOptions);
           },
         })
     
-        // add dynamically anchor tags
+        // add anchor tags
         let markup = '';
         for (let i in markersArray) {
           markup += `<a href="#" onclick="markersArray['${i}'].openPopup()"><b>${magsArray[i]} Mag</b></a><br/>`;
         }
         document.getElementById('anchors').innerHTML = markup;
       });
+
+// add map legend
+var legend = L.control({ position: "bottomleft" });
+
+legend.onAdd = function(map) {
+  var div = L.DomUtil.create("div", "legend");
+  div.innerHTML += "<h4>Earthquake Magnitude</h4>";
+  div.innerHTML += '<i style="background: #8B008B"></i><span>9.0 or above</span><br>';
+  div.innerHTML += '<i style="background: #C71585"></i><span>8.0 to 8.9</span><br>';
+  div.innerHTML += '<i style="background: #8B0000"></i><span>7.0 to 7.9</span><br>';
+  div.innerHTML += '<i style="background: #FF0000"></i><span>6.0 to 6.9</span><br>';
+  div.innerHTML += '<i style="background: #FF4500"></i><span>5.0 to 5.9</span><br>';
+  div.innerHTML += '<i style="background: #FF8C00"></i><span>4.0 to 4.9</span><br>';
+  div.innerHTML += '<i style="background: #FFA500"></i><span>3.0 to 3.9</span><br>';
+  div.innerHTML += '<i style="background: #DAA520"></i><span>2.0 to 2.9</span><br>';
+  div.innerHTML += '<i style="background: #FFD700"></i><span>1.0 to 1.9</span><br>';
+  div.innerHTML += '<i style="background: #FFFF00"></i><span>0.9 or below</span><br>';
+
+  return div;
+};
+
+legend.addTo(map);
