@@ -31,14 +31,14 @@ $.getJSON(earthquakeFeedUrl, function(data) {
 
             // define popups
             markersArray[feature.id] = L.circleMarker(latlng, geojsonMarkerOptions)
-                   .addTo(map)
-                   .bindPopup(
-                  `<b>Magnitude:</b>  ${feature.properties.mag} 
-                   <br><b>Location:</b>  ${feature.properties.place}
-                   <br><b>Time:</b>  ${d}`, {
-              closeButton: true,
-              offset: L.point(0, -20)
-            });
+            .addTo(map)
+            .bindPopup(
+              `<b>Magnitude:</b>  ${feature.properties.mag} 
+              <br><b>Location:</b>  ${feature.properties.place}
+              <br><b>Time:</b>  ${d}`, {
+                closeButton: true,
+                offset: L.point(0, -20)
+              });
     
             // load mags into array
             magsArray[feature.id] = feature.properties.mag;
